@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#b91c2c">
+  <title>ترکی‌یار | آموزش ترکی استانبولی</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <a class="logo" href="#">🇹🇷 ترکی‌یار</a>
+  <nav>
+    <a href="#lessons">درس‌ها</a>
+    <a href="#flashcards">فلش‌کارت</a>
+    <a href="#quiz">آزمون</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-content">
+      <span class="badge">یادگیری ترکی از صفر</span>
+      <h1>ترکی استانبولی رو<br><span>آسان یاد بگیر!</span></h1>
+      <p>با درس‌های کوتاه، لغات کاربردی و آزمون‌های جذاب، قدم‌به‌قدم ترکی یاد بگیر.</p>
+      <a href="#lessons" class="btn">شروع یادگیری ←</a>
+    </div>
+    <div class="hero-card">
+      <div class="flag">🇹🇷</div>
+      <h2 lang="tr">Merhaba!</h2>
+      <p class="pronunciation">مِرحَبا</p>
+      <h3>سلام!</h3>
+      <hr>
+      <p lang="tr" dir="ltr">Nasılsın?</p>
+      <p>حالت چطوره؟</p>
+    </div>
+  </section>
+
+  <section class="features">
+    <div>📚 <strong>درس‌های کاربردی</strong></div>
+    <div>🃏 <strong>فلش‌کارت لغات</strong></div>
+    <div>🎯 <strong>آزمون تعاملی</strong></div>
+  </section>
+
+  <section class="section" id="lessons">
+    <div class="section-title">
+      <span>مسیر یادگیری</span>
+      <h2>درس‌های ترکی استانبولی</h2>
+      <p>یک درس انتخاب کن و یادگیری رو شروع کن.</p>
+    </div>
+
+    <div class="lesson-grid">
+      <button class="lesson" data-lesson="0">
+        <span class="lesson-icon">👋</span>
+        <small>درس اول</small>
+        <h3>سلام و احوال‌پرسی</h3>
+        <p>عبارت‌های اولیه و ضروری</p>
+        <span class="more">مشاهده درس ←</span>
+      </button>
+
+      <button class="lesson" data-lesson="1">
+        <span class="lesson-icon">🙋</span>
+        <small>درس دوم</small>
+        <h3>معرفی خودت</h3>
+        <p>اسم، ملیت و آشنایی</p>
+        <span class="more">مشاهده درس ←</span>
+      </button>
+
+      <button class="lesson" data-lesson="2">
+        <span class="lesson-icon">💬</span>
+        <small>درس سوم</small>
+        <h3>عبارت‌های روزمره</h3>
+        <p>کلمات پرکاربرد روزانه</p>
+        <span class="more">مشاهده درس ←</span>
+      </button>
+    </div>
+
+    <div id="lessonContent" class="lesson-content" hidden></div>
+  </section>
+
+  <section class="flash-section section" id="flashcards">
+    <div class="section-title">
+      <span>مرور هوشمند</span>
+      <h2>فلش‌کارت لغات</h2>
+      <p>روی کارت کلیک کن تا معنی فارسی نمایش داده بشه.</p>
+    </div>
+
+    <div class="flash-area">
+      <button id="prevCard" class="arrow" aria-label="کارت قبلی">→</button>
+      <button id="flashcard" class="flashcard">
+        <span class="flash-label">واژه ترکی</span>
+        <strong id="word" lang="tr" dir="ltr">Merhaba</strong>
+        <span id="pron">مِرحَبا</span>
+        <span id="meaning" class="meaning" hidden>سلام</span>
+        <small id="tapHint">برای دیدن معنی کلیک کن ↻</small>
+      </button>
+      <button id="nextCard" class="arrow" aria-label="کارت بعدی">←</button>
+    </div>
+    <p id="cardCounter" class="counter">کارت ۱ از ۱۰</p>
+    <button id="shuffleCards" class="secondary-btn">🔀 ترتیب تصادفی</button>
+  </section>
+
+  <section class="quiz-section" id="quiz">
+    <div class="section quiz-container">
+      <div class="section-title">
+        <span>خودت رو امتحان کن</span>
+        <h2>آزمون زبان ترکی</h2>
+        <p>به سؤال‌ها جواب بده و امتیازت رو ببین.</p>
+      </div>
+
+      <div id="quizBox" class="quiz-box">
+        <div class="quiz-meta">
+          <span>آزمون مقدماتی</span>
+          <span id="questionCount">سؤال ۱ از ۵</span>
+        </div>
+        <div class="progress"><span id="progressBar"></span></div>
+        <h3 id="question">معنی Merhaba چیست؟</h3>
+        <div id="options" class="options"></div>
+        <p id="feedback" class="feedback" hidden></p>
+        <div class="quiz-actions">
+          <button id="checkBtn" class="btn" disabled>بررسی پاسخ</button>
+          <button id="nextBtn" class="btn" hidden>سؤال بعدی ←</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <h2>هر روز یک کلمه جدید یاد بگیر!</h2>
+    <p>یادگیری زبان با قدم‌های کوچک شروع می‌شه.</p>
+    <a href="#lessons" class="btn">شروع اولین درس</a>
+  </section>
+</main>
+
+<footer>
+  <a class="logo" href="#">🇹🇷 ترکی‌یار</a>
+  <p>ساخته‌شده برای علاقه‌مندان به زبان ترکی استانبولی</p>
+  <a href="#">بازگشت به بالا ↑</a>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
