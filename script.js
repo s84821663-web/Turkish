@@ -1,290 +1,295 @@
 
-const lessons = [
-  {
-    title: "سلام و احوال‌پرسی",
-    items: [
-      ["Merhaba", "سلام", "مِرحَبا"],
-      ["Günaydın", "صبح بخیر", "گون‌آیدِن"],
-      ["İyi akşamlar", "عصر بخیر", "ای‌یی آکشاملار"],
-      ["Nasılsın?", "حالت چطوره؟", "ناسیلسین"],
-      ["İyiyim", "خوبم", "ای‌یی‌ییم"],
-      ["Hoşça kal", "خداحافظ", "هوشچا کال"]
-    ]
-  },
-  {
-    title: "معرفی خودت",
-    items: [
-      ["Benim adım Ali", "اسم من علی است", "بَنیم آدِم علی"],
-      ["Ben İranlıyım", "من ایرانی هستم", "بَن ایرانلی‌ییم"],
-      ["Memnun oldum", "از آشنایی خوشوقتم", "مَمنون اُلدوم"],
-      ["Nerelisin?", "اهل کجایی؟", "نِرِلیسین"],
-      ["Türkçe öğreniyorum", "دارم ترکی یاد می‌گیرم", "تورکچه اُغرَنی‌یوروم"]
-    ]
-  },
-  {
-    title: "عبارت‌های روزمره",
-    items: [
-      ["Lütfen", "لطفاً", "لوتفَن"],
-      ["Teşekkürler", "متشکرم", "تَشَکّورلَر"],
-      ["Evet", "بله", "اِوِت"],
-      ["Hayır", "نه", "هایر"],
-      ["Tamam", "باشه", "تامام"],
-      ["Ne kadar?", "چند؟ / قیمتش چقدر است؟", "نِه کادار"]
-    ]
-  }
-];
+const $ = (selector) => document.querySelector(selector);
 
-const cards = [
-  ["Merhaba", "مِرحَبا", "سلام"],
-  ["Teşekkürler", "تَشَکّورلَر", "متشکرم"],
-  ["Lütfen", "لوتفَن", "لطفاً"],
-  ["Evet", "اِوِت", "بله"],
-  ["Hayır", "هایر", "نه"],
-  ["Günaydın", "گون‌آیدِن", "صبح بخیر"],
-  ["Nasılsın?", "ناسیلسین", "حالت چطوره؟"],
-  ["Tamam", "تامام", "باشه"],
-  ["Güzel", "گوزَل", "زیبا / خوب"],
-  ["Hoşça kal", "هوشچا کال", "خداحافظ"]
-];
+// -------------------- دارک مود و لایت مود --------------------
 
-const questions = [
-  {
-    q: "معنی Merhaba چیست؟",
-    options: ["خداحافظ", "سلام", "لطفاً", "شب بخیر"],
-    answer: 1,
-    explain: "Merhaba یعنی سلام."
-  },
-  {
-    q: "کدام کلمه به معنی متشکرم است؟",
-    options: ["Teşekkürler", "Günaydın", "Hayır", "Nasılsın?"],
-    answer: 0,
-    explain: "Teşekkürler یعنی متشکرم."
-  },
-  {
-    q: "معنی Evet چیست؟",
-    options: ["نه", "شاید", "بله", "ببخشید"],
-    answer: 2,
-    explain: "Evet یعنی بله."
-  },
-  {
-    q: "صبح بخیر به ترکی چه می‌شود؟",
-    options: ["İyi geceler", "Hoşça kal", "Lütfen", "Günaydın"],
-    answer: 3,
-    explain: "Günaydın یعنی صبح بخیر."
-  },
-  {
-    q: "معنی Nasılsın? چیست؟",
-    options: ["اسمت چیست؟", "حالت چطوره؟", "اهل کجایی؟", "قیمتش چنده؟"],
-    answer: 1,
-    explain: "Nasılsın? یعنی حالت چطوره؟"
-  }
-];
+const themeToggle = $("#themeToggle");
 
-// بخش درس‌ها
-document.querySelectorAll("[data-lesson]").forEach(button => {
-  button.addEventListener("click", () => {
-    const lesson = lessons[Number(button.dataset.lesson)];
-    const content = document.getElementById("lessonContent");
+function applyTheme(theme) {
+  document.body.classList.toggle("dark", theme === "dark");
+  themeToggle.textContent =
+    theme === "dark" ? " حالت روشن" : " حالت تیره";
 
-    content.replaceChildren();
-
-    const title = document.createElement("h3");
-    title.textContent = lesson.title;
-    content.appendChild(title);
-
-    const list = document.createElement("div");
-    list.className = "vocab-list";
-
-    lesson.items.forEach(([word, meaning, pron]) => {
-      const item = document.createElement("div");
-      item.className = "vocab-item";
-
-      const wordEl = document.createElement("strong");
-      wordEl.textContent = word;
-      wordEl.lang = "tr";
-      wordEl.dir = "ltr";
-
-      const meaningEl = document.createElement("span");
-      meaningEl.textContent = `${meaning} (${pron})`;
-
-      item.append(wordEl, meaningEl);
-      list.appendChild(item);
-    });
-
-    content.appendChild(list);
-    content.hidden = false;
-    content.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  });
-});
-
-// بخش فلش‌کارت‌ها
-let cardIndex = 0;
-let revealed = false;
-let order = cards.map((_, i) => i);
-
-function renderCard() {
-  const [word, pron, meaning] = cards[order[cardIndex]];
-
-  document.getElementById("word").textContent = word;
-  document.getElementById("pron").textContent = pron;
-  document.getElementById("meaning").textContent = meaning;
-
-  document.getElementById("meaning").hidden = !revealed;
-  document.getElementById("tapHint").hidden = revealed;
-
-  document.getElementById("cardCounter").textContent =
-    `کارت ${cardIndex + 1} از ${order.length}`;
+  document.documentElement.style.colorScheme =
+    theme === "dark" ? "dark" : "light";
 }
 
-document.getElementById("flashcard").addEventListener("click", () => {
-  revealed = !revealed;
-  renderCard();
+let savedTheme = "light";
+
+try {
+  savedTheme = localStorage.getItem("turkeyar-theme") || "light";
+} catch {}
+
+applyTheme(savedTheme);
+
+themeToggle.addEventListener("click", () => {
+  const nextTheme = document.body.classList.contains("dark")
+    ? "light"
+    : "dark";
+
+  applyTheme(nextTheme);
+
+  try {
+    localStorage.setItem("turkeyar-theme", nextTheme);
+  } catch {}
 });
 
-document.getElementById("prevCard").addEventListener("click", () => {
-  cardIndex = (cardIndex - 1 + order.length) % order.length;
-  revealed = false;
-  renderCard();
-});
+// -------------------- لغات آموزشی --------------------
 
-document.getElementById("nextCard").addEventListener("click", () => {
-  cardIndex = (cardIndex + 1) % order.length;
-  revealed = false;
-  renderCard();
-});
+const words = [
+  ["Merhaba", "سلام", "سلامت و احوالپرسی"],
+  ["Günaydın", "صبح بخیر", "سلامت و احوالپرسی"],
+  ["İyi akşamlar", "عصر بخیر", "سلامت و احوالپرسی"],
+  ["İyi geceler", "شب بخیر", "سلامت و احوالپرسی"],
+  ["Nasılsın?", "حالت چطوره؟", "سلامت و احوالپرسی"],
+  ["İyiyim", "خوبم", "سلامت و احوالپرسی"],
+  ["Teşekkürler", "ممنون", "سلامت و احوالپرسی"],
+  ["Lütfen", "لطفاً", "سلامت و احوالپرسی"],
+  ["Evet", "بله", "روزمره"],
+  ["Hayır", "نه", "روزمره"],
+  ["Tamam", "باشه", "روزمره"],
+  ["Belki", "شاید", "روزمره"],
+  ["Anlamıyorum", "متوجه نمی‌شوم", "روزمره"],
+  ["Anlıyorum", "متوجه می‌شوم", "روزمره"],
+  ["Bilmiyorum", "نمی‌دانم", "روزمره"],
+  ["Özür dilerim", "ببخشید", "روزمره"],
+  ["Affedersiniz", "معذرت می‌خواهم", "روزمره"],
+  ["Hoşça kal", "خداحافظ", "روزمره"],
+  ["Görüşürüz", "می‌بینمت", "روزمره"],
+  ["Arkadaş", "دوست", "روزمره"],
+  ["Aile", "خانواده", "روزمره"],
+  ["Ev", "خانه", "روزمره"],
+  ["Okul", "مدرسه", "روزمره"],
+  ["İş", "کار", "روزمره"],
+  ["Kitap", "کتاب", "روزمره"],
+  ["Su", "آب", "غذا"],
+  ["Ekmek", "نان", "غذا"],
+  ["Süt", "شیر", "غذا"],
+  ["Kahve", "قهوه", "غذا"],
+  ["Çay", "چای", "غذا"],
+  ["Yemek", "غذا", "غذا"],
+  ["Elma", "سیب", "غذا"],
+  ["Tavuk", "مرغ", "غذا"],
+  ["Hesap lütfen", "صورتحساب لطفاً", "غذا"],
+  ["Restoran", "رستوران", "غذا"],
+  ["Nerede?", "کجاست؟", "سفر"],
+  ["Tuvalet", "دستشویی", "سفر"],
+  ["Otel", "هتل", "سفر"],
+  ["Havaalanı", "فرودگاه", "سفر"],
+  ["Tren", "قطار", "سفر"],
+  ["Otobüs", "اتوبوس", "سفر"],
+  ["Bilet", "بلیط", "سفر"],
+  ["Sağ", "راست", "سفر"],
+  ["Sol", "چپ", "سفر"],
+  ["Düz", "مستقیم", "سفر"],
+  ["Ne kadar?", "چقدر است؟", "خرید"],
+  ["Pahalı", "گران", "خرید"],
+  ["Ucuz", "ارزان", "خرید"],
+  ["Para", "پول", "خرید"],
+  ["İndirim", "تخفیف", "خرید"],
+  ["Mağaza", "فروشگاه", "خرید"],
+  ["Bugün", "امروز", "زمان"],
+  ["Yarın", "فردا", "زمان"],
+  ["Dün", "دیروز", "زمان"],
+  ["Şimdi", "الان", "زمان"],
+  ["Saat", "ساعت", "زمان"],
+  ["Sabah", "صبح", "زمان"],
+  ["Akşam", "عصر / شب", "زمان"],
+  ["Mutlu", "خوشحال", "احساسات"],
+  ["Üzgün", "ناراحت", "احساسات"],
+  ["Yorgun", "خسته", "احساسات"],
+  ["Güzel", "زیبا / خوب", "احساسات"],
+  ["Seviyorum", "دوست دارم", "احساسات"],
+  ["Aşk", "عشق", "احساسات"],
+  ["Harika", "عالی", "احساسات"]
+];
 
-document.getElementById("shuffleCards").addEventListener("click", () => {
-  for (let i = order.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [order[i], order[j]] = [order[j], order[i]];
-  }
+const wordsGrid = $("#wordsGrid");
+const wordSearch = $("#wordSearch");
+const emptyWords = $("#emptyWords");
+const wordCount = $("#wordCount");
 
-  cardIndex = 0;
-  revealed = false;
-  renderCard();
-});
+let activeCategory = "همه";
 
-renderCard();
+function renderWords() {
+  const search = wordSearch.value.trim().toLocaleLowerCase("tr");
 
-// بخش آزمون
-let questionIndex = 0;
-let selectedAnswer = null;
-let score = 0;
-let answered = false;
+  const filtered = words.filter(([tr, fa, category]) => {
+    const matchesCategory =
+      activeCategory === "همه" || category === activeCategory;
 
-const questionEl = document.getElementById("question");
-const optionsEl = document.getElementById("options");
-const checkBtn = document.getElementById("checkBtn");
-const nextBtn = document.getElementById("nextBtn");
-const feedback = document.getElementById("feedback");
+    const matchesSearch =
+      tr.toLocaleLowerCase("tr").includes(search) ||
+      fa.toLocaleLowerCase("fa").includes(search);
 
-function renderQuestion() {
-  const current = questions[questionIndex];
-
-  selectedAnswer = null;
-  answered = false;
-
-  document.getElementById("questionCount").textContent =
-    `سؤال ${questionIndex + 1} از ${questions.length}`;
-
-  document.getElementById("progressBar").style.width =
-    `${((questionIndex + 1) / questions.length) * 100}%`;
-
-  questionEl.textContent = current.q;
-  optionsEl.replaceChildren();
-
-  current.options.forEach((option, index) => {
-    const button = document.createElement("button");
-    button.className = "option";
-    button.textContent = option;
-
-    button.addEventListener("click", () => {
-      if (answered) return;
-
-      selectedAnswer = index;
-
-      optionsEl.querySelectorAll(".option").forEach(item => {
-        item.classList.toggle("selected", item === button);
-      });
-
-      checkBtn.disabled = false;
-    });
-
-    optionsEl.appendChild(button);
+    return matchesCategory && matchesSearch;
   });
 
-  feedback.hidden = true;
-  checkBtn.hidden = false;
-  checkBtn.disabled = true;
-  nextBtn.hidden = true;
+  wordCount.textContent = `${filtered.length} لغت`;
+  emptyWords.hidden = filtered.length !== 0;
+
+  wordsGrid.innerHTML = filtered.map(([tr, fa, category]) => `
+    <article class="word-card">
+      <div class="word-top">
+        <span class="word-tr" lang="tr" dir="ltr">${escapeHTML(tr)}</span>
+        <button type="button" class="speak-word"
+          data-word="${escapeHTML(tr)}" aria-label="شنیدن تلفظ ${escapeHTML(tr)}">
+          
+        </button>
+      </div>
+      <div class="word-fa">${escapeHTML(fa)}</div>
+      <span class="word-category">${escapeHTML(category)}</span>
+    </article>
+  `).join("");
 }
 
-checkBtn.addEventListener("click", () => {
-  if (selectedAnswer === null || answered) return;
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
 
-  answered = true;
-  const current = questions[questionIndex];
-  const buttons = [...optionsEl.querySelectorAll(".option")];
+wordSearch.addEventListener("input", renderWords);
 
-  buttons.forEach((button, index) => {
-    button.disabled = true;
+$("#categoryFilters").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-category]");
+  if (!button) return;
 
-    if (index === current.answer) {
-      button.classList.add("correct");
-    }
+  activeCategory = button.dataset.category;
 
-    if (index === selectedAnswer && index !== current.answer) {
-      button.classList.add("wrong");
-    }
+  document.querySelectorAll(".filter").forEach((item) => {
+    item.classList.toggle("active", item === button);
   });
 
-  if (selectedAnswer === current.answer) score++;
-
-  feedback.textContent =
-    `${selectedAnswer === current.answer ? "آفرین! پاسخ درست بود. " : "پاسخ درست را مشخص کردیم. "}${current.explain}`;
-
-  feedback.hidden = false;
-  checkBtn.hidden = true;
-  nextBtn.hidden = false;
-
-  nextBtn.textContent =
-    questionIndex === questions.length - 1
-      ? "مشاهده نتیجه"
-      : "سؤال بعدی ←";
+  renderWords();
 });
 
-nextBtn.addEventListener("click", () => {
-  if (questionIndex < questions.length - 1) {
-    questionIndex++;
-    renderQuestion();
+wordsGrid.addEventListener("click", (event) => {
+  const button = event.target.closest(".speak-word");
+  if (!button) return;
+
+  if (!("speechSynthesis" in window)) {
+    alert("مرورگرت از قابلیت تلفظ پشتیبانی نمی‌کند.");
     return;
   }
 
-  const box = document.getElementById("quizBox");
-  box.replaceChildren();
-
-  const title = document.createElement("h2");
-  title.textContent = `نتیجه آزمون: ${score} از ${questions.length}`;
-
-  const description = document.createElement("p");
-  description.textContent =
-    score === questions.length
-      ? "عالی بود! به همه سؤال‌ها درست جواب دادی."
-      : score >= 3
-        ? "آفرین! با کمی تمرین بیشتر بهتر می‌شی."
-        : "درس‌ها و فلش‌کارت‌ها رو مرور کن و دوباره امتحان بده.";
-
-  const restart = document.createElement("button");
-  restart.className = "btn";
-  restart.textContent = "تکرار آزمون ↻";
-
-  restart.addEventListener("click", () => {
-    questionIndex = 0;
-    score = 0;
-    renderQuestion();
-  });
-
-  box.append(title, description, restart);
+  const utterance = new SpeechSynthesisUtterance(button.dataset.word);
+  utterance.lang = "tr-TR";
+  utterance.rate = 0.85;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utterance);
 });
 
-renderQuestion();
+renderWords();
+
+// -------------------- مترجم فارسی و ترکی --------------------
+
+const sourceLang = $("#sourceLang");
+const targetLang = $("#targetLang");
+const sourceText = $("#sourceText");
+const translateBtn = $("#translateBtn");
+const translationResult = $("#translationResult");
+const charCount = $("#charCount");
+
+sourceText.addEventListener("input", () => {
+  charCount.textContent = `${sourceText.value.length} / ۱۰۰۰`;
+
+  if (sourceText.value.length > 1000) {
+    sourceText.value = sourceText.value.slice(0, 1000);
+    charCount.textContent = "۱۰۰۰ / ۱۰۰۰";
+  }
+});
+
+$("#swapLang").addEventListener("click", () => {
+  const oldSource = sourceLang.value;
+
+  sourceLang.value = targetLang.value;
+  targetLang.value = oldSource;
+
+  const oldText = sourceText.value;
+  sourceText.value = translationResult.textContent.trim();
+  translationResult.textContent = oldText || "ترجمه اینجا نمایش داده می‌شود...";
+  charCount.textContent = `${sourceText.value.length} / ۱۰۰۰`;
+});
+
+translateBtn.addEventListener("click", async () => {
+  const text = sourceText.value.trim();
+  const from = sourceLang.value;
+  const to = targetLang.value;
+
+  if (!text) {
+    translationResult.textContent = "اول متن موردنظرت رو وارد کن.";
+    return;
+  }
+
+  if (from === to) {
+    translationResult.textContent = "زبان مبدأ و مقصد باید متفاوت باشند.";
+    return;
+  }
+
+  if (text.length > 1000) {
+    translationResult.textContent = "متن باید حداکثر ۱۰۰۰ کاراکتر باشد.";
+    return;
+  }
+
+  translateBtn.disabled = true;
+  translateBtn.textContent = "در حال ترجمه...";
+  translationResult.textContent = "کمی صبر کن، داریم ترجمه می‌کنیم...";
+
+  try {
+    const params = new URLSearchParams({
+      q: text,
+      langpair: `${from}|${to}`
+    });
+
+    const response = await fetch(
+      `https://api.mymemory.translated.net/get?${params.toString()}`
+    );
+
+    if (!response.ok) {
+      throw new Error("خطا در ارتباط با سرویس ترجمه");
+    }
+
+    const data = await response.json();
+    const translated = data?.responseData?.translatedText;
+
+    if (!translated || data.responseStatus !== 200) {
+      throw new Error("ترجمه در دسترس نیست");
+    }
+
+    const decoded = document.createElement("textarea");
+    decoded.innerHTML = translated;
+    translationResult.textContent = decoded.value;
+  } catch (error) {
+    translationResult.textContent =
+      "ترجمه انجام نشد. اتصال اینترنتت رو بررسی کن و دوباره امتحان کن.";
+  } finally {
+    translateBtn.disabled = false;
+    translateBtn.textContent = "ترجمه کن ";
+  }
+});
+
+// -------------------- کپی ترجمه --------------------
+
+$("#copyBtn").addEventListener("click", async () => {
+  const text = translationResult.textContent.trim();
+
+  if (!text || text === "ترجمه اینجا نمایش داده می‌شود...") {
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(text);
+    $("#copyBtn").textContent = " کپی شد";
+    setTimeout(() => {
+      $("#copyBtn").textContent = " کپی";
+    }, 1500);
+  } catch {
+    translationResult.focus?.();
+    alert("کپی خودکار انجام نشد. متن ترجمه رو انتخاب و کپی کن.");
+  }
+});
